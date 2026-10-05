@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101e29">
+  <meta name="description" content="Smart Escape: an interactive, browser-only evacuation route simulator.">
+  <title>Smart Escape — Evacuation Route Simulator</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="Smart Escape">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>SMART<span class="brand-light">ESCAPE</span></span>
+      </div>
+      <div class="topbar-right">
+        <span class="topbar-tag" data-i18n="simulationTag">INTERACTIVE SIMULATION</span>
+        <div class="language-toggle" role="group" aria-label="Language / ভাষা">
+          <button type="button" id="lang-en" class="active" aria-pressed="true">EN</button>
+          <button type="button" id="lang-bn" aria-pressed="false">বাংলা</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro">
+        <div>
+          <div class="eyebrow"><span class="eyebrow-dot"></span><span data-i18n="eyebrow">EVACUATION ROUTE SIMULATOR</span></div>
+          <h1 data-i18n="headline">Find the safest way <em>out.</em></h1>
+          <p data-i18n="intro">Explore a building, change its hazards, and watch the lowest-cost escape route update instantly.</p>
+        </div>
+        <div class="intro-number" aria-hidden="true">01<span>/</span>03</div>
+      </section>
+
+      <div class="workspace">
+        <aside class="panel controls-panel" aria-label="Controls">
+          <div class="panel-heading"><span class="section-number">01</span><h2 data-i18n="setupHeading">Set up</h2></div>
+          <p class="panel-caption" data-i18n="setupCaption">Import a building map or explore the practice layout.</p>
+          <div class="file-actions">
+            <label class="button button-primary upload-button" for="file-input"><span aria-hidden="true">↥</span><span data-i18n="importButton">Import building.json</span></label>
+            <input id="file-input" type="file" accept=".json,application/json">
+            <button type="button" id="demo-button" class="button button-quiet" data-i18n="demoButton">Load practice map</button>
+          </div>
+          <div id="notice" class="notice" role="alert" hidden></div>
+
+          <div class="divider"></div>
+          <div class="field-heading"><span class="section-number">02</span><label for="start-select" data-i18n="startHeading">Starting location</label></div>
+          <p class="field-help" data-i18n="startHelp">Choose an available room or junction.</p>
+          <div class="select-wrap"><select id="start-select" aria-label="Starting location"></select><span aria-hidden="true">⌄</span></div>
+
+          <div class="divider"></div>
+          <div class="field-heading"><span class="section-number">03</span><h2 data-i18n="hazardHeading">Change conditions</h2></div>
+          <p class="field-help" data-i18n="hazardHelp">Switch to edit mode and click the map, or use the controls below.</p>
+          <div class="mode-switch" role="group" aria-label="Map interaction mode">
+            <button type="button" id="mode-select" class="active" aria-pressed="true" data-i18n="selectMode">Choose start</button>
+            <button type="button" id="mode-edit" aria-pressed="false" data-i18n="editMode">Edit hazards</button>
+          </div>
+          <div class="hazard-tabs" role="tablist" aria-label="Hazard controls">
+            <button type="button" id="tab-locations" role="tab" aria-selected="true" class="active" data-i18n="locationsTab">Locations</button>
+            <button type="button" id="tab-corridors" role="tab" aria-selected="false" data-i18n="corridorsTab">Corridors</button>
+            <button type="button" id="tab-exits" role="tab" aria-selected="false" data-i18n="exitsTab">Exits</button>
+          </div>
+          <div id="hazard-list" class="hazard-list" aria-live="polite"></div>
+          <button type="button" id="reset-button" class="button button-reset"><span aria-hidden="true">↺</span><span data-i18n="resetButton">Reset to initial state</span></button>
+        </aside>
+
+        <section class="panel map-panel" aria-labelledby="map-title">
+          <div class="map-toolbar">
+            <div><div class="small-label" data-i18n="mapOverline">LIVE BUILDING MAP</div><h2 id="map-title"></h2></div>
+            <span id="source-badge" class="source-badge"></span>
+          </div>
+          <div id="map-stage" class="map-stage">
+            <svg id="building-map" viewBox="0 0 1000 620" role="group" aria-labelledby="map-title map-description"></svg>
+            <p id="map-description" class="sr-only" data-i18n="mapDescription">Select a start or edit hazards on the map. The highlighted route leads to the lowest-cost open exit.</p>
+          </div>
+          <div class="map-footer">
+            <div class="legend"><span><i class="legend-dot room"></i><span data-i18n="room">Room</span></span><span><i class="legend-dot junction"></i><span data-i18n="junction">Junction</span></span><span><i class="legend-dot exit"></i><span data-i18n="exit">Exit</span></span><span><i class="legend-line"></i><span data-i18n="route">Route</span></span><span><i class="legend-dot unavailable"></i><span data-i18n="unavailable">Unavailable</span></span></div>
+            <span id="map-hint" class="map-hint">Tap a location to choose your start</span>
+          </div>
+        </section>
+
+        <aside class="panel result-panel" aria-labelledby="result-title">
+          <div class="panel-heading"><span class="section-number">04</span><h2 id="result-title" data-i18n="routeHeading">Your escape route</h2></div>
+          <div id="route-result" aria-live="polite"></div>
+          <div class="result-explainer">
+            <div class="explainer-icon" aria-hidden="true">i</div>
+            <p data-i18n="costNote">Routes use corridor costs, not visual distance. The least-cost reachable open exit wins.</p>
+          </div>
+          <div class="safety-note"><span aria-hidden="true">◇</span><span data-i18n="safetyNote">Educational simulation only. Not for real-world evacuation decisions.</span></div>
+        </aside>
+      </div>
+    </main>
+    <footer><span>SMART ESCAPE <span class="footer-separator">/</span> <span data-i18n="footer">Built for the AI DevFest practice challenge</span></span><span>2026</span></footer>
+  </div>
+  <script type="module" src="./src/app.js"></script>
+</body>
+</html>
