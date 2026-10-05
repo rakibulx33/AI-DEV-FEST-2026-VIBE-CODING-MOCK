@@ -5,7 +5,7 @@ Interactive, browser-only evacuation route simulator for the AI DevFest 2026 pra
 **Participant:** O.F.M. Rakibul Hasan  
 **Registration:** 241-15-223  
 **Public repository:** https://github.com/rakibulx33/AI-DEV-FEST-2026-VIBE-CODING-MOCK  
-**Live website:** Pending GitHub Pages activation and verification
+**Live website:** https://rakibulx33.github.io/AI-DEV-FEST-2026-VIBE-CODING-MOCK/
 
 > This is a practice implementation prepared on 5 October 2026. The official rulebook says contest project code must be written and committed only after T+0 on 6 October 2026. This repository cannot be represented as an eligible contest submission without following that rule.
 
@@ -59,12 +59,12 @@ Additional tests cover equal-cost ties, disconnected graphs, blocked corridors, 
 
 ## Deploy
 
-The app is a static site. In this repository, open **Settings → Pages → Build and deployment → Source**, select **GitHub Actions**, and save. The included workflow publishes the site from `main`. After the workflow succeeds, open its reported HTTPS URL in Chrome and replace the pending live website line above with the verified URL.
+The app is a static site. The included GitHub Actions workflow publishes every update to `main` through GitHub Pages. The deployed site is available at the live website link above.
 
 ## Known issues
 
 - The map preserves node positions but dense or overlapping input coordinates may cause labels to overlap.
-- GitHub Pages has not yet been activated and verified. The repository name is for this mock submission; the separate official contest rule requires a repository named `devfest-241-15-223` and code written during the contest window.
+- The repository name is for this mock submission; the separate official contest rule requires a repository named `devfest-241-15-223` and code written during the contest window.
 
 ## AI use
 
